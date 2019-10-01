@@ -28,6 +28,34 @@ Route::post("/task", "HomeController@postWork");
 
 Route::get("/table", "HomeController@getTable");
 
+Route::get("/profile", "HomeController@getProfile");
+Route::post("/profile", "HomeController@postProfile");
+
+Route::get("/table-tasks", "HomeController@getTableTasks");
+Route::get("/table-tasks/delete/{id}", "HomeController@getDeleteTask");
+
+Route::get("/edit/{id}", "HomeController@getEdit");
+Route::post("/edit/{id}", "HomeController@postEdit");
+
+Route::get("/admin/users", "AdminController@getUsers");
+
+Route::get("/admin/edit_user/{id}", "AdminController@getEditUser");
+Route::post("/admin/edit_user/{id}", "AdminController@postEditUser");
+
+Route::get("/admin/users/delete/{id}", "AdminController@getDeleteUser");
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

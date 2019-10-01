@@ -9,4 +9,9 @@ class User extends Authenticable
 {
    public $timestamps = false;
    protected $table = "users";
+
+   public function works()
+    {
+        return $this->hasMany("App\Work", "user_id" );
+    }
 }

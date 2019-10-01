@@ -18,19 +18,46 @@ class AuthController extends Controller
 
     public function getRegister()
     {
-        return view("register");
+        return view("register"); 
     }
 
     public function postRegister(Request $request)
-    {
-        $user = new User();
-        $user->email = $request->email;
-        $user->password = Hash::make($request->psw);
-        $user->preffered_working_hours=0;
-        $user->save();
+    {   
+
+          $rules = [
+        'email'    => 'required|email|unique:users',
+        'password' => [
+            'required',
+            'min:8',
+            'confirmed',
+        ],
+    ];
+
+    $validation = \Validator::make( $request->all(), $rules );
+
+    if ( $validation->fails() ) {
+
+        return view("register",                       
+            [
+                "error_response"=>  $validation->errors()->all()
+             ]
+        );
+
+
+    } else {
+                $user = new User();
+                $user->email = $request->email;
+                $user->preffered_working_hours=0;
+                $user->password = Hash::make($request->password);
+                $user->role=1;
+                $user->save();
 
         return redirect("/");
+          }
     }
+
+
+
 
     public function postLogin( Request $request)
     {
@@ -42,6 +69,12 @@ class AuthController extends Controller
             return redirect("/");
         }
     }
+
+
+   
+
+
+   
 }
 
 

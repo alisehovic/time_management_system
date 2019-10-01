@@ -25,21 +25,26 @@
                 <th>Worked hours</th> 
                 <th>Date</th>
               </tr>
-              @foreach($works as $work)
-              @if ($preffered_hours<= $work->worked_hours)
+              @foreach($works as $date => $work)
+              @if ($preffered_hours <= $work["sum"])
                 <tr style="background-color: green">
-                    @else                 
-                    <tr style="background-color: red">
-
-                    @endif
+              @else                 
+                <tr style="background-color: red">
+              @endif
                     <td>
-                        {{ $work->type_of_work }}
+                        <ul>
+                        @foreach($work["type_of_work"] as $task)
+                            <li>
+                                {{ $task }}
+                            </li>
+                        @endforeach
+                    </ul>
                     </td>
                     <td>
-                        {{ $work->worked_hours }}
+                        {{ $work["sum"] }}
                     </td>
                     <td>
-                        {{ $work->date }}
+                        {{ $date }}
                     </td>
                 </tr>
               @endforeach

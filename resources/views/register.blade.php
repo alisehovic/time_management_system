@@ -25,14 +25,28 @@
     <label for="email"><b>Email</b></label>
     <input class="register" type="text" placeholder="Enter email" name="email" required> <br />
     <label for="psw"><b>Password</b></label>
-    <input class="register" type="password" placeholder="Enter Password" name="psw" required> <br />
+    <input class="register" type="password" placeholder="Enter Password" name="password" required> <br />
+    <label for="psw"><b> Confirm Password</b></label>
+    <input class="register" type="password" placeholder="Enter Password" name="password_confirmation" required> <br />
         
     <button class="tipka" type="submit">Register</button>
   </div>
 
-  <div class="container" >
-    <button type="button" class="cancelbtn tipka">Cancel</button> <br />
+  <div class="container">
+     @if(isset($error_response))
+                 <h4>Errors:</h4>
+                 <ul>
+          @foreach($error_response as $error)
+          
+            <li> {{ $error }}</li>
+            
+          
+           
 
+
+          @endforeach
+          </ul>
+     @endif
   </div>
 </form>
     </body>

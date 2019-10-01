@@ -19,7 +19,7 @@
         <form method="post" action="/preffered">
         <h2>Preffered working hours:</h2>
         <input  type="hidden" name="_token" value="{{ csrf_token() }}">
-         <input type="text" placeholder="Enter preffered working hours" name="preffered" required> <br /> 
+         <input type="text" value="{{ $user->preffered_working_hours }}" name="preffered" required> <br /> 
               <button class="tipka" type="submit">Submit</button>
         </form>
 
