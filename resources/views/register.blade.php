@@ -23,12 +23,29 @@
   <div class="container">
   	<input type="hidden" name="_token" value="{{ csrf_token() }}">
     <label for="email"><b>Email</b></label>
-    <input class="register" type="text" placeholder="Enter email" name="email" required> <br />
+    <input class="register" type="text" placeholder="Enter email" name="email" > <br />
     <label for="psw"><b>Password</b></label>
-    <input class="register" type="password" placeholder="Enter Password" name="password" required> <br />
+    <input class="register" type="password" placeholder="Enter Password" name="password" > <br />
     <label for="psw"><b> Confirm Password</b></label>
-    <input class="register" type="password" placeholder="Enter Password" name="password_confirmation" required> <br />
-        
+    <input class="register" type="password" placeholder="Enter Password" name="password_confirmation" > <br />
+    <label for="city"><b> City</b></label>
+    <input class="register" type="text" placeholder="Enter city" name="city" > <br />
+    
+    <label for="country"><b> Country</b></label>
+    <select class="register" name="country">    
+    @foreach ($countries as $country)
+    @if($country->id ==26)
+    <option value="{{ $country->id }}" selected="selected">
+    {{ $country->name }}
+    </option>
+    @else
+    <option value="{{ $country->id }}" >
+    {{ $country->name }}
+    </option>
+    @endif
+    @endforeach
+    </select> <br />
+    
     <button class="tipka" type="submit">Register</button>
   </div>
 

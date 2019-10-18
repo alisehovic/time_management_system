@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Hash;
 use Auth;
+use App\Country;
 
 class AuthController extends Controller
 {
@@ -18,14 +19,24 @@ class AuthController extends Controller
 
     public function getRegister()
     {
-        return view("register"); 
+        $countries = Country::all();
+
+        return view('register',
+            [
+                'countries'=> $countries,
+
+            ]
+
+            ); 
     }
 
     public function postRegister(Request $request)
     {   
+        $countries = Country::all();
 
           $rules = [
         'email'    => 'required|email|unique:users',
+        'city'  => 'required',
         'password' => [
             'required',
             'min:8',
@@ -39,7 +50,10 @@ class AuthController extends Controller
 
         return view("register",                       
             [
-                "error_response"=>  $validation->errors()->all()
+                "error_response"=>  $validation->errors()->all(),
+                "countries" => $countries,
+
+
              ]
         );
 
@@ -50,6 +64,8 @@ class AuthController extends Controller
                 $user->preffered_working_hours=0;
                 $user->password = Hash::make($request->password);
                 $user->role=1;
+                $user->city = $request->city;
+                $user->country_id = $request->country;
                 $user->save();
 
         return redirect("/");
@@ -69,6 +85,7 @@ class AuthController extends Controller
             return redirect("/");
         }
     }
+
 
 
    

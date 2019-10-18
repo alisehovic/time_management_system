@@ -17,6 +17,8 @@
     </head>
     <body>
 
+         @include("_menu")
+
         <h2>Done tasks table</h2>
         <h3>Preffered hours: {{ $preffered_hours }}<h3/>
        <table style="width:100%;  ">

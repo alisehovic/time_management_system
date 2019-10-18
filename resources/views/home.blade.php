@@ -16,19 +16,41 @@
         
     </head>
     <body>
-    	
-        <h2>Home</h2>
-        <a href="/preffered"><button class="tipka">Set preffered working hours</button></a>
-   		<a href="/logout"><button class="tipka">Logout</button></a>
-    	<a href="/task"><button class="tipka">Napisi sta si uradio</button></a>
-    	<a href="/table"><button class="tipka">Lista uradjenog posla ikad</button></a>
-        <a href="/profile"><button class="tipka">Profile</button></a>
-        <a href="/table-tasks"><button class="tipka">Table</button></a>
-        @if ($user->role==2) 
-        <a href="/admin/users"><button class="tipka">Users</button></a>
-        @endif
+        @include("_menu")
+
+          <h2>Projects</h2>
+       <table style="width:100%;  ">
+              <tr>
+                <th>Name of the project</th>
+                <th>Project admin</th>
+                <th>Action</th>
+              </tr>
+              @foreach($projects as $project)
+                   @if ($user->role==2||$project->user_id==$user->id)
+                <tr style="height: 50px">
+                    <td>
+                        
+                            {{$project->name }}
+
+                       
+                     </td>
+                      <td>
+                          {{ $project->admin_user->email }}
+                       
+                     </td>
+
+                    <td>
+                        <a href="/open_project/{{$project->id}}" class="tipka">Open</a>
+                        <a href="/edit_project/{{$project->id}}" class="tipka">Edit</a>
+                        <a href="/home/{{$project->id}}" class="tipka">Delete</a>                  
+                    </td>
+                </tr>
+              @endif
+                 @endforeach
 
 
+               
+          
 
 
     </body>

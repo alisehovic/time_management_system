@@ -41,12 +41,14 @@ class AdminController extends Controller
 
          public function getUsers()
 
-            {
-                $users = user::all();
+            {   
+                $user = Auth::user();
+                $users = User::all();
 
                 return view("users",
 
                     [
+                        "user"  => $user,
                         "users" => $users,
                     ]
 
@@ -122,7 +124,7 @@ class AdminController extends Controller
         
             return redirect('/admin/users');
         }
-        
+
 
 
 

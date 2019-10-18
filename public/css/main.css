@@ -1,8 +1,13 @@
+
 body {
   font-family: Arial, Helvetica, sans-serif;
   text-align: center;
-}
-form {border: 3px solid #f1f1f1;}
+  margin: 0px;
+    }
+
+form {
+  border: 3px solid #f1f1f1;
+      }
 
 .login{
   width: 20%;
@@ -48,5 +53,57 @@ form {border: 3px solid #f1f1f1;}
   box-sizing: border-box;  
 
 }
-  
+
+.lista{
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  margin-bottom: 50px;
+
 }
+
+.lista li {
+  float: left;
+  padding: 10px;
+}
+
+.lista li a{
+   display: inline-block;
+  color: white;
+  text-align: center;
+  padding: 10px 12px;
+  text-decoration: none;
+}
+.lista li:not(.slika):hover{
+  background-color:   #006400;
+  border-radius: 8px;
+  transition: all 500ms ease; 
+
+}
+
+li.logout {
+float: right;
+padding: 10px;
+}
+
+.image {
+  width: 300px;
+  height: 300px;
+  background-size: cover;
+  background-position: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  border-radius: 20px;
+}
+.header{
+
+  height: 60px;
+  background-color: green;
+
+}
+  li.slika {
+  float: right;
+  padding: 0px;
+  }

@@ -17,6 +17,9 @@
     </head>
     <body>
 
+        @include("_menu")
+
+
         <h2>Done tasks table</h2>
        <table style="width:100%;  ">
               <tr>

@@ -23,8 +23,8 @@ Route::get('/logout',  'HomeController@getLogout');
 Route::get("/preffered", "HomeController@getPrefferedWorkingHours");
 Route::post("/preffered", "HomeController@postPreffered");
 
-Route::get("/task", "HomeController@getTask");
-Route::post("/task", "HomeController@postWork");
+Route::get("/task/{project_id}", "HomeController@getTask");
+Route::post("/task/{project_id}", "HomeController@postWork");
 
 Route::get("/table", "HomeController@getTable");
 
@@ -43,6 +43,40 @@ Route::get("/admin/edit_user/{id}", "AdminController@getEditUser");
 Route::post("/admin/edit_user/{id}", "AdminController@postEditUser");
 
 Route::get("/admin/users/delete/{id}", "AdminController@getDeleteUser");
+
+Route::get("/change-profile-picture", "HomeController@getProfilePicture");
+Route::post("/change-profile-picture", "HomeController@postProfilePicture");
+
+Route::get("/project", "HomeController@getProject");
+Route::post("/project", "HomeController@postProject");
+
+Route::get("/open_project/{project_id}", "HomeController@getOpenProject");
+
+Route::get("/home/{project_id}", "HomeController@getDeleteProject");
+
+Route::get("/edit_project/{project_id}", "HomeController@getEditProject");
+Route::post("/edit_project/{project_id}", "HomeController@postEditProject");
+
+Route::post("/open_project/add-user/{project_id}", "HomeController@postAddUser");
+
+Route::get("/open_project/kick/{user_project_id}", "HomeController@getKickUser");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

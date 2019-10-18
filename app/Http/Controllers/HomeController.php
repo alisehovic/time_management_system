@@ -8,7 +8,10 @@ use App\User;
 use Illuminate\Support\Facades\Hash;
 use Auth;
 use App\Work;
-
+use Image;
+use Storage;
+use App\Project;
+use App\UserProject;
 
 class HomeController extends Controller 
 {
@@ -30,9 +33,14 @@ class HomeController extends Controller
     public function getHome()
     {
         $user=Auth::user();
+        $projects=Project::all();
+        $users=User::all();
+
         return view('home',
             [
+                "projects" =>$projects,
                 "user" => $user,
+                "users" => $users
             ]
 
     );
@@ -62,18 +70,30 @@ class HomeController extends Controller
         return redirect("/home");
     }
 
-    public function getTask(){
-        return view("task");
-    }
+    public function getTask($id){
 
-      function postWork(Request $request) 
-    {
+         $user= Auth::user();
+         $project=Project::where('id', $id)->first();
+       return view("task",
+            [
+                "user" => $user,
+                "project" => $project
+            ]
+             ); 
+         
+        }
+
+
+      function postWork($id, Request $request) 
+    {   
         $user= Auth::user();
         $work= new Work();
         $work->type_of_work=$request->type_of_work;
         $work->worked_hours=$request->worked_hours;
         $work->user_id=$user->id;
         $work->date=$request->date;
+        $work->project_id=$id;
+
 
         
         $work->save();
@@ -120,7 +140,8 @@ class HomeController extends Controller
          }
 
         return view("table",
-            [
+            [   
+                "user" => $user,
                 "works" => $works_array,
                 "preffered_hours" => $preffered
             ]
@@ -130,7 +151,12 @@ class HomeController extends Controller
 
      public function getProfile()
     {
-        return view("profile");
+        $user=Auth::user();
+        return view("profile",
+            [ 
+            "user" => $user,
+            ]
+    );
     }
 
 
@@ -168,7 +194,7 @@ class HomeController extends Controller
                 $user->password = Hash::make($request->password);
                 $user->save();
 
-        return redirect("home");
+        return redirect("preffered");
           }
 
    
@@ -181,13 +207,13 @@ class HomeController extends Controller
 
        
         $user = Auth::user();
-        $works = Work::where('user_id', $user->id)
-                          ->get();
+        $works = $user->works;
 
 
         return view("table_tasks",
             [
                 "works" => $works,
+                "user" => $user,
             ]
         );
 
@@ -205,6 +231,7 @@ class HomeController extends Controller
 
         public function getEdit($id)
                 {
+                    $user=Auth::user();
                     $work = Work::where('id', $id)
                             ->first();
 
@@ -212,6 +239,7 @@ class HomeController extends Controller
 
                         [
                             "work" => $work,
+                            "user" => $user,
                         ]
 
 
@@ -231,12 +259,180 @@ class HomeController extends Controller
 
         }
 
-       
+
+        public function getProfilePicture()
+        {
+                $user=Auth::user();
+               return view("change_profile_picture",
+            [ 
+            "user" => $user,
+            ]
+    );
+        }
+
+        public function postProfilePicture(Request $request)
+        {
+            $file=$request->file("pic");
+            $user= Auth::user();
+
+            // returns \Intervention\Image\Image - OK
+            $image = Image::make($file);
 
 
+            $hash="slika_".$user->id;
+
+            // use hash as a name
+            $path = "images/".$hash.".jpg";
+
+            // save it locally to ~/public/images/{$hash}.jpg
+            $image->save(public_path($path));
+
+            $url = "/" . $path;
+            $user->profile_picture=$url;
+            $user->save();
+
+            return redirect ("/home");
+         }
+
+         public function getProject()
+            {
+                $user=Auth::user();
+                return view('project',
+                    [
+                        "user" => $user,
+                    ]
+
+            );
+            }
 
 
+            public function postProject(Request $request){
 
+            $user=Auth::user();
+            $project=new Project();
+            $project->name=$request->name_of_project;
+            $project->user_id=$user->id;
+            $project->save();
+
+            return redirect("/home");
+
+        }
+
+
+             public function getOpenProject($id)
+                {
+                    $user=Auth::user();
+                    $works=Work::where('project_id', $id)
+                            ->get();
+                    $project=Project::find($id);
+                    $id_users=array_flatten(UserProject::select("user_id")->where('project_id', $id)->get()->toArray());
+
+                    $users=User::where('id', '!=', $user->id)->whereNotIN("id", $id_users)->get();
+                    $project_users=UserProject::where('project_id', $id) ->get();
+
+                    if($user->id==$project->user_id||$user->role==2)
+                    { 
+                    return view('open_project',
+                        [   
+                            "users" =>$users,
+                            "user" => $user,
+                            "works" => $works,
+                            "project" => $project,
+                            "id_users" => $id_users,
+                            "project_users" => $project_users
+                        ]
+
+                );
+                    }
+                    else return redirect('/home');
+                }
+
+
+                       
+             public function getDeleteProject($id)
+        {
+
+            $project = Project::find($id);
+            $user = Auth::user();
+            $works = $user->works;
+            if($user->id==$project->user_id||$user->role==2)
+                    { 
+           
+                foreach ($works as $work) 
+                {
+            
+                     $work->delete();
+                }
+
+                    $project->delete();
+                    
+        }
+         
+         return redirect()->back();
+        }
+
+         public function getEditProject($id)
+                {
+                    $user=Auth::user();
+                    $project = Project::where('id', $id)
+                            ->first();
+                if($user->id==$project->user_id||$user->role==2)
+                    { 
+
+                    return view("edit_project",
+
+                        [
+                            "project" => $project,
+                            "user" => $user,
+                        ]
+
+
+                );
+                     }
+                     return redirect()->back();
+
+                }
+
+         public function postEditProject($id, Request $request){
+
+            $project = Project::where('id', $id)
+                            ->first();
+            $project->name= $request->project_name;
+            $project->save();
+
+            return redirect("/home");
+
+        }
+
+         public function postAddUser($id, Request $request){
+
+            $user= new UserProject();
+            $user->user_id=$request->add_user;
+            $user->project_id=$id;
+            $user->save();
+
+
+            return redirect("/open_project/".$id);
+
+        }
+
+
+         public function getKickUser($id)
+        {
+
+
+            $user_project = UserProject::where('id', $id)->first();
+
+
+            if($user_project->user_id!=$user_project->project->user_id)
+            {           
+                 $user_project->delete();
+              
+            } 
+          
+        
+            return redirect()->back();
+        }
 
 
  }

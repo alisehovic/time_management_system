@@ -17,6 +17,9 @@
     </head>
     <body>
 
+        @include("_menu")
+
+
         <h2>Users table</h2>
        <table style="width:100%;  ">
               <tr>
@@ -24,6 +27,8 @@
                 <th>Email</th> 
                 <th>Preffered hours</th>
                 <th>Role</th>
+                <th>Profile picture</th>
+
 
               </tr>
               @foreach($users as $user)
@@ -47,6 +52,15 @@
                     
                       @endif
 
+                    </td>
+                    <td> 
+                      @if (is_null($user->profile_picture))
+                      <img src="/images/default.png" width="100" height="100">
+                      @else
+
+                      <img src="{{ $user->profile_picture }}" width="100" height="100">
+
+                      @endif
                     </td>
 
                     <td>
